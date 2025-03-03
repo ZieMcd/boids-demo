@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtdus38daof0d"]
+
+[ext_resource type="PackedScene" uid="uid://h0itoj4lq066" path="res://boid.tscn" id="1_j6tdb"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="boid" parent="." instance=ExtResource("1_j6tdb")]
+position = Vector2(758, -17)
+rotation = 3.14159
+speed = 100
+debug = false
+dir = Vector2(1, 0)
+turn_force = 35
+
+[node name="boid3" parent="." instance=ExtResource("1_j6tdb")]
+position = Vector2(1043, -302)
+rotation = 3.14159
+speed = 100
+debug = false
+dir = Vector2(1, 0)
+turn_force = 35
+
+[node name="boid2" parent="." instance=ExtResource("1_j6tdb")]
+position = Vector2(1400, 53)
+speed = 100
+debug = true
+dir = Vector2(-1, 0)
+turn_force = 35
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.2, 0.2)
