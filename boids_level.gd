@@ -2,10 +2,10 @@ extends Node2D
 
 @onready var camera = $Camera2D  # Adjust the path to your camera
 @onready var view_port = get_viewport_rect()
-@onready var left = -2877
-@onready var right = 2877
-@onready var top = -1600
-@onready var bottom = 1600
+@onready var left = -3000
+@onready var right = 3000
+@onready var top = -2000
+@onready var bottom = 2000
 @onready var boids = []
 @export var num_instances = 150
 var boid_asset = preload("res://boid.tscn")

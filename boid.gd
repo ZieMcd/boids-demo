@@ -16,27 +16,44 @@ func _ready() -> void:
 	vision.area_exited.connect(_leave)
 
 func _process(delta: float) -> void:
-	dir = Avoid2()
+	dir = Avoid().normalized()
+	dir = Aligne().normalized()
+	# dir = Center().normalized()
 	rotation =  dir.angle_to_point(Vector2.ZERO)
 	position += dir * speed * delta
 
 
-# func Aligne():
-# 	var sum_dir = Vector2.ZERO
-# 	var num_boids = near_by_boids.size()
-# 	prints("num: ",num_boids)
-# 	if num_boids < 1:
-# 		return Vector2.ZERO
+func Center():
+	var avg_pos = Vector2.ZERO
+	var num_boids = near_by_boids.size()
 
-# 	for boid_id in near_by_boids:
-# 		prints(near_by_boids[boid_id].dir)
-# 		sum_dir += near_by_boids[boid_id].dir
-# 	
-# 	var avg_dir = sum_dir/num_boids
-# 	prints("avg dir: ", avg_dir, "my dir: ", dir.normalized())
-# 	return avg_dir.normalized()
+	if num_boids < 1:
+		return dir
+
+	for boid_id in near_by_boids:
+		avg_pos += near_by_boids[boid_id].position
 	
-func Avoid2():
+	return dir + (avg_pos - position)
+
+
+func Aligne():
+	var sum_dir = dir
+	var num_boids = near_by_boids.size()
+
+	if num_boids < 1:
+		return dir
+
+	for boid_id in near_by_boids:
+		sum_dir += near_by_boids[boid_id].dir
+	
+	var avg_dir = sum_dir/num_boids
+
+	if(debug):
+		prints("avg dir: ", avg_dir, "my dir: ", dir)
+
+	return dir + avg_dir
+	
+func Avoid():
 	if (near_by_boids.size() == 0):
 		return dir
 
@@ -56,45 +73,7 @@ func Avoid2():
 			prints("force_strength: ", force_strength)
 
 
-		return dir.normalized() + new_dir*force_strength
-
-
- # from https://www.youtube.com/watch?v=oFnIlNW_p10&list=WL&index=2&t=966s
-func Avoid(cur_dir: Vector2):
-	var relative_pos_sum = Vector2.ZERO
-
-	for body_id in near_by_boids:
-		var body = near_by_boids[body_id]
-		relative_pos_sum += position - body.position
-		
-	if relative_pos_sum != Vector2.ZERO:
-		return relative_pos_sum/Vector2(pow(relative_pos_sum.x, 2), pow(relative_pos_sum.y, 2))
-
-	return cur_dir
-
-
-
-@export var speed_old = 100
-@export var rotational = 0.01
-@export var turn_force = 35
-func MyMethodForAviodance(delta: float):
-
-	for body_id in near_by_boids:
-		var body = near_by_boids[body_id]
-		var other_local_pos = to_local(body.position)
-		var distance = sqrt(abs(other_local_pos.x)) + sqrt(abs(other_local_pos.y))
-
-		var f = (turn_force - distance) * rotational
-
-		if f < 0:
-			f = 0
-
-		if other_local_pos.x < 0:
-			rotation = (rotation + f)
-		else:
-			rotation = (rotation - f)
-
-	position -= Vector2(speed_old, 0).rotated(rotation) * delta
+		return dir + new_dir*force_strength
 
 
 func _enter(body: Node2D):

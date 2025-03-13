@@ -5,7 +5,7 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="boid" parent="." instance=ExtResource("1_j6tdb")]
-position = Vector2(28, -93)
+position = Vector2(-9, -103)
 rotation = 3.14159
 debug = true
 dir = Vector2(1, 0)
