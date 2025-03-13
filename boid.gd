@@ -5,41 +5,74 @@ extends Node2D
 @onready var this_id = get_instance_id()
 @onready var near_by_boids:Dictionary = {}
 
-# var top = 1200*2
-# var bottom = -top
-# var left = 2100*2
-# var right = -left
-
-@export var speed = 100
+@export var speed = 400
+@export var turn_multipler = 50
 @export var debug = false
 @export var dir = Vector2(1, 1)
+
 
 func _ready() -> void:
 	vision.area_entered.connect(_enter)
 	vision.area_exited.connect(_leave)
 
 func _process(delta: float) -> void:
-	MyMethodForAviodance(delta)
+	dir = Avoid2()
+	rotation =  dir.angle_to_point(Vector2.ZERO)
+	position += dir * speed * delta
 
-func Avoid(delta: float):
-	var pos_sum = Vector2.ZERO	
+
+# func Aligne():
+# 	var sum_dir = Vector2.ZERO
+# 	var num_boids = near_by_boids.size()
+# 	prints("num: ",num_boids)
+# 	if num_boids < 1:
+# 		return Vector2.ZERO
+
+# 	for boid_id in near_by_boids:
+# 		prints(near_by_boids[boid_id].dir)
+# 		sum_dir += near_by_boids[boid_id].dir
+# 	
+# 	var avg_dir = sum_dir/num_boids
+# 	prints("avg dir: ", avg_dir, "my dir: ", dir.normalized())
+# 	return avg_dir.normalized()
+	
+func Avoid2():
+	if (near_by_boids.size() == 0):
+		return dir
+
+	if debug:
+		prints("num boids: ", near_by_boids.size())
+
+	for body_id in near_by_boids:
+		var boid = near_by_boids[body_id]
+		var new_dir = (global_position - boid.global_position).normalized()
+
+		var force_strength = 1 - clamp(((global_position - boid.global_position).length()/240), 0, 1)
+
+		if debug:
+			prints("dir: ", dir, " new dir: ", new_dir)
+			# prints("dir: ", dir, " new dir: ", new_dir)
+			prints("mang: ", (global_position - boid.global_position).length())
+			prints("force_strength: ", force_strength)
+
+
+		return dir.normalized() + new_dir*force_strength
+
+
+ # from https://www.youtube.com/watch?v=oFnIlNW_p10&list=WL&index=2&t=966s
+func Avoid(cur_dir: Vector2):
 	var relative_pos_sum = Vector2.ZERO
 
 	for body_id in near_by_boids:
 		var body = near_by_boids[body_id]
 		relative_pos_sum += position - body.position
-		# prints("local ps:", to_local(position - body.position), " id: ", this_id)
-		# prints("relative_pos_sum: ", relative_pos_sum, " id: ", this_id)
 		
 	if relative_pos_sum != Vector2.ZERO:
-		var inverse = relative_pos_sum/Vector2(pow(relative_pos_sum.x, 2), pow(relative_pos_sum.y, 2))
-		if debug:
-			prints(inverse)
-		dir = dir + inverse*10
+		return relative_pos_sum/Vector2(pow(relative_pos_sum.x, 2), pow(relative_pos_sum.y, 2))
 
-	dir = dir.normalized() 
-	position += dir * speed * delta
-	rotation = lerp_angle(rotation, dir.angle_to_point(Vector2.ZERO),0.4)
+	return cur_dir
+
+
 
 @export var speed_old = 100
 @export var rotational = 0.01
@@ -65,10 +98,13 @@ func MyMethodForAviodance(delta: float):
 
 
 func _enter(body: Node2D):
-	var parent = body.get_parent()
-	var body_id = parent.get_instance_id()
-	if body_id != this_id:
-		near_by_boids[body_id] = parent
+	
+	if body.name == 'Body':
+		var parent = body.get_parent()
+		var body_id = parent.get_instance_id()
+		if body_id != this_id:
+			near_by_boids[body_id] = parent
+		
 	
 
 func _leave(body: Node2D):

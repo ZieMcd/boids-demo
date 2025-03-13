@@ -7,7 +7,7 @@
 script = ExtResource("1_t06u8")
 
 [node name="boid" parent="." instance=ExtResource("1_epa50")]
-position = Vector2(-16, 101)
+position = Vector2(2106, -1)
 rotation = 6.28319
 
 [node name="Camera2D" type="Camera2D" parent="."]
