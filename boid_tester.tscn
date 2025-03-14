@@ -5,15 +5,15 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="boid" parent="." instance=ExtResource("1_j6tdb")]
-position = Vector2(-9, -103)
+position = Vector2(467, -191)
 rotation = 3.14159
 debug = true
 dir = Vector2(1, 0)
 
 [node name="boid3" parent="." instance=ExtResource("1_j6tdb")]
-position = Vector2(517, -290)
+position = Vector2(986, -407)
 rotation = 3.14159
-speed = 0
+speed = 400
 dir = Vector2(-1, 0)
 
 [node name="Camera2D" type="Camera2D" parent="."]

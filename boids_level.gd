@@ -7,7 +7,7 @@ extends Node2D
 @onready var top = -2000
 @onready var bottom = 2000
 @onready var boids = []
-@export var num_instances = 150
+@export var num_instances = 100
 var boid_asset = preload("res://boid.tscn")
 
 # Called when the node enters the scene tree for the first time.
@@ -33,8 +33,8 @@ func spawn_random():
 	for i in range(num_instances):
 		var instance = boid_asset.instantiate()
 		add_child(instance)
-		var random_x = randf_range(-2100, 2100)
-		var random_y = randf_range(-1200, 1200)
+		var random_x = randf_range(left, right)
+		var random_y = randf_range(top, bottom)
 		instance.position = Vector2(random_x, random_y)
 		instance.dir = Vector2(randf_range(-100, 100)/100, randf_range(-100, 100)/100)
 		boids.append(instance)

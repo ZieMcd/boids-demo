@@ -9,7 +9,7 @@ size = Vector2(62.0625, 59.125)
 
 [node name="boid" type="Node2D"]
 script = ExtResource("1_kuxu5")
-speed = 600
+speed = 700
 dir = Vector2(0.5, 0.1)
 
 [node name="Vision" type="Area2D" parent="."]
